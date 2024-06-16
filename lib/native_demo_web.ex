@@ -56,8 +56,7 @@ defmodule NativeDemoWeb do
 
       unquote(html_helpers())
 
-      # LiveView Native support
-      use LiveViewNative.LiveView
+
     end
   end
 
@@ -67,8 +66,7 @@ defmodule NativeDemoWeb do
 
       unquote(html_helpers())
 
-      # LiveView Native support
-      use LiveViewNative.LiveComponent
+     
     end
   end
 

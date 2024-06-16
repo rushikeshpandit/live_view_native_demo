@@ -63,28 +63,30 @@ config :phoenix, :json_library, Jason
 
 # LVN - Required
 # Registers each available plugin
-config :live_view_native, plugins: [
-  LiveViewNative.SwiftUI
-]
+config :live_view_native,
+  plugins: [
+    LiveViewNative.SwiftUI,
+    LiveViewNative.Jetpack
+  ]
 
 # LVN - Required
 # Each format must be registered as a mime type add to
 # existing configuration if one exists as this will overwrite
 config :mime, :types, %{
-  "text/swiftui" => ["swiftui"]
+  "text/swiftui" => ["swiftui"],
+  "text/jetpack" => ["jetpack"],
+  "text/styles" => ["styles"]
 }
 
 # LVN - Required
 # Phoenix must know how to encode each LVN format
-config :phoenix_template, :format_encoders, [
-  swiftui: Phoenix.HTML.Engine
-]
+config :phoenix_template, :format_encoders,
+  swiftui: Phoenix.HTML.Engine,
+  jetpack: Phoenix.HTML.Engine
 
 # LVN - Required
 # Phoenix must know how to compile neex templates
-config :phoenix, :template_engines, [
-  neex: LiveViewNative.Engine
-]
+config :phoenix, :template_engines, neex: LiveViewNative.Engine
 
 # LiveView Native Stylesheet support
 # Omit this if you're not using platforms that support LiveView
@@ -94,23 +96,18 @@ config :live_view_native_stylesheet,
     swiftui: LiveViewNative.SwiftUI.RulesParser
   ]
 
-# LVN - Required
-# You must configure LiveView Native Stylesheets
-# on which file path patterns class names should be extracted from
+# LVN - Required, you must configure LiveView Native Stylesheets
+# on where class names shoudl be extracted from
 config :live_view_native_stylesheet,
   content: [
     swiftui: [
       "lib/**/*swiftui*"
+    ],
+    jetpack: [
+      "lib/**/*jetpack*"
     ]
   ],
   output: "priv/static/assets"
-
-# LVN - Optional
-# If you want to inspect LVN stylesheets from your browser add the `style` type
-config :mime, :types, %{
-  "text/styles" => ["styles"]
-}
-
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

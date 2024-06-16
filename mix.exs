@@ -58,10 +58,16 @@ defmodule NativeDemo.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.2"},
-      {:live_view_native, "~> 0.3.0-rc.1"},
-      {:live_view_native_stylesheet, "~> 0.3.0-rc.1"},
-      {:live_view_native_swiftui, "~> 0.3.0-rc.1"}
-      # {:live_view_native_live_form, "~> 0.3.0-rc.1"}
+      {:bcrypt_elixir, "~> 3.0"},
+      {:live_view_native,
+       github: "liveview-native/live_view_native", branch: "main", override: true},
+      {:live_view_native_stylesheet,
+       github: "liveview-native/live_view_native_stylesheet", branch: "main"},
+      {:live_view_native_swiftui,
+       github: "liveview-native/liveview-client-swiftui", branch: "main"},
+      {:live_view_native_live_form, github: "liveview-native/liveview-native-live-form"},
+      {:live_view_native_jetpack,
+       github: "liveview-native/liveview-client-jetpack", branch: "main"}
     ]
   end
 

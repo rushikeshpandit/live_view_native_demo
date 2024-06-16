@@ -1,7 +1,53 @@
 defmodule NativeDemoWeb.CoreComponents.SwiftUI do
+  @moduledoc """
+  Provides core UI components built for SwiftUI.
+
+  This file contains feature parity components to your applications's CoreComponent module.
+  The goal is to retain a common API for fast prototyping. Leveraging your existing knowledge
+  of the `NativeDemo.CoreComponents` functions you should expect identical functionality for similarly named
+  components between web and native. That means utilizing your existing `handle_event/3` functions to manage state
+  and stay focused on adding new templates for your native applications.
+
+  The default components use `LiveViewNative.SwiftUI.UtilityStyles`, a generated styling syntax
+  that allows you to call nearly any modifier. Refer to the documentation in `LiveViewNative.SwiftUI` for more information.
+
+  Icons are referenced by a system name. Read more about the [Xcode Asset Manager](https://developer.apple.com/documentation/xcode/asset-management)
+  to learn how to include different assets in your LiveView Native applications. In addition, you can also use [SF Symbols](https://developer.apple.com/sf-symbols/).
+  On any MacOS open Spotlight and search `SF Symbols`. The catalog application will provide a reference name that can be used. All SF Symbols
+  are incuded with all SwiftUI applications.
+
+  Most of this documentation was "borrowed" from the analog Phoenix generated file to ensure this project is expressing the same behavior.
+  """
+
   use LiveViewNative.Component
 
   import LiveViewNative.LiveForm.Component
+
+  @doc """
+  Renders an input with label and error messages.
+
+  A `Phoenix.HTML.FormField` may be passed as argument,
+  which is used to retrieve the input name, id, and values.
+  Otherwise all attributes may be passed explicitly.
+
+  ## Types
+
+  This function accepts all SwiftUI input types, considering that:
+
+    * You may also set `type="Picker"` to render a `<Picker>` tag
+
+    * `type="Toggle"` is used exclusively to render boolean values
+
+  ## Examples
+
+      <Group class="keyboardType(.emailAddress)">
+        <.input field={@form[:email]} type="TextField" />
+        <.input name="my-input" errors={["oh no!"]} />
+      </Group>
+
+  [INSERT LVATTRDOCS]
+  """
+  @doc type: :component
 
   attr :id, :any, default: nil
   attr :name, :any
@@ -10,15 +56,16 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   attr :type, :string,
     default: "TextField",
-    values: ~w(TextFieldLink DatePicker MultiDatePicker Picker SecureField Slider Stepper TextEditor TextField Toggle hidden)
+    values:
+      ~w(TextFieldLink DatePicker MultiDatePicker Picker SecureField Slider Stepper TextEditor TextField Toggle hidden)
 
   attr :field, Phoenix.HTML.FormField,
-    doc: "a form field struct retrieved from the form, for example: @form[:email]"
+    doc: "a form field struct retrieved from the form, for example: `@form[:email]`"
 
   attr :errors, :list, default: []
   attr :checked, :boolean, doc: "the checked flag for checkbox inputs"
   attr :prompt, :string, default: nil, doc: "the prompt for select inputs"
-  attr :options, :list, doc: "the options to pass to Phoenix.HTML.Form.options_for_select/2"
+  attr :options, :list, doc: "the options to pass to `Phoenix.HTML.Form.options_for_select/2`"
   attr :multiple, :boolean, default: false, doc: "the multiple flag for select inputs"
 
   attr :min, :any, default: nil
@@ -32,8 +79,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     default: "on",
     values: ~w(on off)
 
-  attr :rest, :global,
-    include: ~w(disabled step)
+  attr :rest, :global, include: ~w(disabled step)
 
   slot :inner_block
 
@@ -45,11 +91,22 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     |> assign_new(:value, fn -> field.value end)
     |> assign(
       :rest,
-      Map.put(assigns.rest, :class, [
-        Map.get(assigns.rest, :class, ""),
-        (if assigns.readonly or Map.get(assigns.rest, :disabled, false), do: "disabled-true", else: ""),
-        (if assigns.autocomplete == "off", do: "text-input-autocapitalization-never autocorrection-disabled", else: "")
-      ] |> Enum.join(" "))
+      Map.put(
+        assigns.rest,
+        :class,
+        [
+          Map.get(assigns.rest, :class, ""),
+          if(assigns.readonly or Map.get(assigns.rest, :disabled, false),
+            do: "disabled-true",
+            else: ""
+          ),
+          if(assigns.autocomplete == "off",
+            do: "text-input-autocapitalization-never autocorrection-disabled",
+            else: ""
+          )
+        ]
+        |> Enum.join(" ")
+      )
     )
     |> input()
   end
@@ -180,6 +237,10 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
+  @doc """
+  Generates a generic error message.
+  """
+  @doc type: :component
   slot :inner_block, required: true
 
   def error(assigns) do
@@ -190,6 +251,13 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
+  @doc """
+  Renders a header with title.
+
+  [INSERT LVATTRDOCS]
+  """
+  @doc type: :component
+
   attr :class, :string, default: nil
 
   slot :inner_block, required: true
@@ -198,7 +266,10 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   def header(assigns) do
     ~LVN"""
-    <VStack class={"navigation-title-:title navigation-subtitle-:subtitle toolbar--toolbar #{@class}"}>
+    <VStack class={[
+      "navigation-title-:title navigation-subtitle-:subtitle toolbar--toolbar",
+      @class
+      ]}>
       <Text template="title">
         <%= render_slot(@inner_block) %>
       </Text>
@@ -212,12 +283,123 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
+  @doc """
+  Renders a modal.
+
+  ## Examples
+
+      <.modal show={@show} id="confirm-modal">
+        This is a modal.
+      </.modal>
+
+  An event name may be passed to the `:on_cancel` to configure
+  the closing/cancel event, for example:
+
+      <.modal show={@show} id="confirm" on_cancel="toggle-show">
+        This is another modal.
+      </.modal>
+
+  """
+  attr :id, :string, required: true
+  attr :show, :boolean, default: false
+  attr :on_cancel, :string
+  slot :inner_block, required: true
+
+  def modal(assigns) do
+    ~LVN"""
+    <VStack
+      id={@id}
+      :if={@show}
+      class="sheet-isPresented:[attr(presented)]-content::content"
+      presented={@show}
+      phx-change={@on_cancel}
+    >
+      <VStack template="content">
+        <%= render_slot(@inner_block) %>
+      </VStack>
+    </VStack>
+    """
+  end
+
+  @doc """
+  Renders flash notices.
+
+  ## Examples
+
+      <.flash kind={:info} flash={@flash} />
+      <.flash kind={:info} phx-mounted={show("#flash")}>Welcome Back!</.flash>
+  """
+  attr :id, :string, doc: "the optional id of flash container"
+  attr :flash, :map, default: %{}, doc: "the map of flash messages to display"
+  attr :title, :string, default: nil
+  attr :kind, :atom, values: [:info, :error], doc: "used for styling and flash lookup"
+  attr :rest, :global, doc: "the arbitrary attributes to add to the flash container"
+
+  slot :inner_block, doc: "the optional inner block that renders the flash message"
+
+  def flash(assigns) do
+    assigns = assign_new(assigns, :id, fn -> "flash-#{assigns.kind}" end)
+
+    ~LVN"""
+    <% msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind) %>
+    <VStack
+      :if={msg != nil}
+      class="hidden alert-[attr(title)]-isPresented:[attr(presented)]-actions::actions-message::message"
+      title={@title}
+      presented={msg != nil}
+      id={@id}
+      {@rest}
+      phx-change="lv:clear-flash"
+      phx-value-key={@kind}
+    >
+      <Text template="message"><%= msg %></Text>
+      <Button template="actions">Ok</Button>
+    </VStack>
+    """
+  end
+
+  @doc """
+  Shows the flash group with standard titles and content.
+
+  ## Examples
+
+      <.flash_group flash={@flash} />
+  """
+  attr :flash, :map, required: true, doc: "the map of flash messages"
+  attr :id, :string, default: "flash-group", doc: "the optional id of flash container"
+
+  def flash_group(assigns) do
+    ~LVN"""
+    <Group id={@id}>
+      <.flash kind={:info} title={"Success!"} flash={@flash} />
+      <.flash kind={:error} title={"Error!"} flash={@flash} />
+    </Group>
+    """
+  end
+
+  @doc """
+  Renders a simple form.
+
+  ## Examples
+
+      <.simple_form for={@form} phx-change="validate" phx-submit="save">
+        <.input field={@form[:email]} label="Email"/>
+        <.input field={@form[:username]} label="Username" />
+        <:actions>
+          <.button>Save</.button>
+        </:actions>
+      </.simple_form>
+
+  [INSERT LVATTRDOCS]
+  """
+  @doc type: :component
+
   attr :for, :any, required: true, doc: "the datastructure for the form"
   attr :as, :any, default: nil, doc: "the server side parameter to collect all input under"
 
   attr :rest, :global,
     include: ~w(autocomplete name rel action enctype method novalidate target multipart),
-    doc: "the arbitrary HTML attributes to apply to the form tag"
+    doc: "the arbitrary attributes to apply to the form tag"
 
   slot :inner_block, required: true
   slot :actions, doc: "the slot for form actions, such as a submit button"
@@ -237,35 +419,131 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
+  @doc """
+  Renders a button.
+
+  ## Examples
+
+      <.button>Send!</.button>
+      <.button phx-click="go">Send!</.button>
+  """
+  @doc type: :component
+
   attr :type, :string, default: nil
   attr :class, :string, default: nil
   attr :rest, :global, include: ~w(disabled form name value)
 
   slot :inner_block, required: true
-  def button(%{ type: "submit" } = assigns) do
+
+  def button(%{type: "submit"} = assigns) do
     ~LVN"""
     <Section>
-      <LiveSubmitButton class="button-style-borderedProminent control-size-large list-row-insets-EdgeInsets() list-row-background-:empty">
-        <Group class="max-w-infinity bold">
+      <LiveSubmitButton class={[
+        "button-style-borderedProminent control-size-large",
+        "list-row-insets-EdgeInsets() list-row-background-:empty",
+        @class]}>
+        <Group class="max-w-infinity bold @class">
           <%= render_slot(@inner_block) %>
         </Group>
       </LiveSubmitButton>
     </Section>
     """
   end
+
   def button(assigns) do
     ~LVN"""
-    <Button>
+    <Button class={@class} {@rest}>
       <%= render_slot(@inner_block) %>
     </Button>
     """
   end
 
+  @doc ~S"""
+  Renders a table with generic styling.
+
+  ## Examples
+
+      <.table id="users" rows={@users}>
+        <:col :let={user} label="id"><%= user.id %></:col>
+        <:col :let={user} label="username"><%= user.username %></:col>
+      </.table>
+  """
+  @doc type: :component
+
+  attr :id, :string, required: true
+  attr :rows, :list, required: true
+  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
+
+  attr :row_item, :any,
+    default: &Function.identity/1,
+    doc: "the function for mapping each row before calling the :col and :action slots"
+
+  slot :col, required: true do
+    attr :label, :string
+  end
+
+  slot :action, doc: "the slot for showing user actions in the last table column"
+
   def table(assigns) do
     ~LVN"""
-    <Table></Table>
+    <Table id={@id}>
+      <Group template="columns">
+        <TableColumn :for={col <- @col}><%= col[:label] %></TableColumn>
+        <TableColumn :if={@action != []} />
+      </Group>
+      <Group template="rows">
+        <TableRow
+          :for={{row, i} <- Enum.with_index(@rows)}
+          id={(@row_id && @row_id.(row)) || i}
+        >
+          <VStack :for={col <- @col}>
+            <%= render_slot(col, @row_item.(row)) %>
+          </VStack>
+          <HStack :if={@action != []}>
+            <%= for action <- @action do %>
+              <%= render_slot(action, @row_item.(row)) %>
+            <% end %>
+          </HStack>
+        </TableRow>
+      </Group>
+    </Table>
     """
   end
+
+  @doc """
+  Renders a data list.
+
+  ## Examples
+
+      <.list>
+        <:item title="Title"><%= @post.title %></:item>
+        <:item title="Views"><%= @post.views %></:item>
+      </.list>
+  """
+  slot :item, required: true do
+    attr :title, :string, required: true
+  end
+
+  def list(assigns) do
+    ~LVN"""
+    <List>
+      <LabeledContent :for={item <- @item}>
+        <Text template="label"><%= item.title %></Text>
+        <%= render_slot(item) %>
+      </LabeledContent>
+    </List>
+    """
+  end
+
+  @doc """
+  Renders a system image from the Asset Manager in Xcode
+  or from SF Symbols.
+
+  ## Examples
+
+      <.icon name="xmark.diamond" />
+  """
+  @doc type: :component
 
   attr :name, :string, required: true
   attr :class, :string, default: nil
@@ -276,13 +554,53 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
+  @doc """
+  Renders an image from a url
+
+  Will render an [`AsyncImage`](https://developer.apple.com/documentation/swiftui/asyncimage)
+  You can customize the lifecycle states of with the slots.
+  """
+
   attr :url, :string, required: true
   attr :rest, :global
-  slot :empty
-  slot :success do
+
+  slot :empty,
+    doc: """
+    The empty state that will render before has successfully been downloaded.
+
+        <.image url={~p"/assets/images/logo.png"}>
+          <:empty>
+            <Image systemName="myloading.spinner" />
+          </:empty>
+        </.image>
+
+    [See SwiftUI docs](https://developer.apple.com/documentation/swiftui/asyncimagephase/success(_:))
+    """
+
+  slot :success,
+    doc: """
+    The success state that will render when the image has successfully been downloaded.
+
+        <.image url={~p"/assets/images/logo.png"}>
+          <:success class="main-logo"/>
+        </.image>
+
+    [See SwiftUI docs](https://developer.apple.com/documentation/swiftui/asyncimagephase/success(_:))
+    """ do
     attr :class, :string
   end
-  slot :failure do
+
+  slot :failure,
+    doc: """
+      The failure state that will render when the image fails to downloaded.
+
+          <.image url={~p"/assets/images/logo.png"}>
+            <:failure class="image-fail"/>
+          </.image>
+
+      [See SwiftUI docs](https://developer.apple.com/documentation/swiftui/asyncimagephase/failure(_:))
+
+    """ do
     attr :class, :string
   end
 
@@ -298,7 +616,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
-  defp image_success(%{ slot: [%{ inner_block: nil }] } = assigns) do
+  defp image_success(%{slot: [%{inner_block: nil}]} = assigns) do
     ~LVN"""
     <AsyncImage image template="phase.success" :for={slot <- @slot} class={slot.class} />
     """
@@ -312,7 +630,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     """
   end
 
-  defp image_failure(%{ slot: [%{ inner_block: nil }] } = assigns) do
+  defp image_failure(%{slot: [%{inner_block: nil}]} = assigns) do
     ~LVN"""
     <AsyncImage error template="phase.failure" :for={slot <- @slot} class={slot.class} />
     """
@@ -341,9 +659,9 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(FormDemoWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(NativeDemoWeb.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(FormDemoWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext(NativeDemoWeb.Gettext, "errors", msg, opts)
     end
   end
 

@@ -1,5 +1,5 @@
 {
-  "originHash" : "91634a2c78aa67843b7a664fe80b9a48dd4502f87a06520fd592302bb034017f",
+  "originHash" : "40c624742c4911f585713dd301d0014dd51b190950943fd955b350b4e452df97",
   "pins" : [
     {
       "identity" : "liveview-client-swiftui",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "b6a24652b35acd534fa437cb4cf4654fcb33828f",
         "version" : "0.1.0-7500ce9"
+      }
+    },
+    {
+      "identity" : "liveview-native-live-form",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/liveview-native/liveview-native-live-form",
+      "state" : {
+        "revision" : "22f5eced128c86eb59e5df1da23176f83b7f809d",
+        "version" : "0.3.0-rc.1"
       }
     },
     {

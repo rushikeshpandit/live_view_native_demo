@@ -5,15 +5,18 @@
 
 import SwiftUI
 import LiveViewNative
+import LiveViewNativeLiveForm
 
 struct ContentView: View {
     var body: some View {
         #LiveView(
             .automatic(
-                development: .localhost(path: "/"),
+                development: .localhost(path: "/users/log_in"),
                 production: URL(string: "https://example.com")!
             ),
-            addons: []
+            addons: [
+                LiveFormRegistry<_>.self
+            ]
         ) {
             ConnectingView()
         } disconnected: {
