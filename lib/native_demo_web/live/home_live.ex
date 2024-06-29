@@ -9,7 +9,16 @@ defmodule NativeDemoWeb.HomeLive do
 
   def render(assigns) do
     ~H"""
-    Hello from Web
+    <div>
+      Hello from Web <br />
+      <br />
+      <button
+        phx-click="navigate"
+        class="text-stone-100 bg-indigo-600 font-semibold rounded py-2.5 px-3 border border-indigo-600 transition hover:bg-indigo-700"
+      >
+        <.link href={~p"/counter"}>Go to counter example</.link>
+      </button>
+    </div>
     """
   end
 end

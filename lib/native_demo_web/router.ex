@@ -74,7 +74,8 @@ defmodule NativeDemoWeb.Router do
       on_mount: [{NativeDemoWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "home", HomeLive
+      live "/home", HomeLive
+      live "/counter", CounterLive
     end
   end
 

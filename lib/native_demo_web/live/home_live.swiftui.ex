@@ -3,7 +3,19 @@ defmodule NativeDemoWeb.HomeLive.SwiftUI do
 
   def render(assigns, _interface) do
     ~LVN"""
-    <Text>Hello, SwiftUI!</Text>
+    <.header >
+    Register
+    </.header>
+    <VStack id="hello-ios" class="background-blue">
+      <HStack>
+        <Text class={["bold(true)"]} >Hello iOS!</Text>
+      </HStack>
+      <HStack>
+        <.link  navigate={"/counter"} >
+          <Text>Counter Demo</Text>
+        </.link>
+      </HStack>
+      </VStack>
     """
   end
 end

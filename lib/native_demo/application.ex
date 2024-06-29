@@ -17,7 +17,8 @@ defmodule NativeDemo.Application do
       # Start a worker by calling: NativeDemo.Worker.start_link(arg)
       # {NativeDemo.Worker, arg},
       # Start to serve requests, typically the last entry
-      NativeDemoWeb.Endpoint
+      NativeDemoWeb.Endpoint,
+      NativeDemo.Counter
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
