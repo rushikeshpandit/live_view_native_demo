@@ -4,7 +4,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   This file contains feature parity components to your applications's CoreComponent module.
   The goal is to retain a common API for fast prototyping. Leveraging your existing knowledge
-  of the `NativeDemo.CoreComponents` functions you should expect identical functionality for similarly named
+  of the `NativeDemoWeb.CoreComponents` functions you should expect identical functionality for similarly named
   components between web and native. That means utilizing your existing `handle_event/3` functions to manage state
   and stay focused on adding new templates for your native applications.
 
@@ -40,7 +40,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   ## Examples
 
-      <Group class="keyboardType(.emailAddress)">
+      <Group style="keyboardType(.emailAddress)">
         <.input field={@form[:email]} type="TextField" />
         <.input name="my-input" errors={["oh no!"]} />
       </Group>
@@ -93,15 +93,15 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
       :rest,
       Map.put(
         assigns.rest,
-        :class,
+        :style,
         [
-          Map.get(assigns.rest, :class, ""),
+          Map.get(assigns.rest, :style, ""),
           if(assigns.readonly or Map.get(assigns.rest, :disabled, false),
-            do: "disabled-true",
+            do: "disabled(true)",
             else: ""
           ),
           if(assigns.autocomplete == "off",
-            do: "text-input-autocapitalization-never autocorrection-disabled",
+            do: "textInputAutocapitalization(.never) autocorrectionDisabled()",
             else: ""
           )
         ]
@@ -245,7 +245,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   def error(assigns) do
     ~LVN"""
-    <Group class="font-caption fg-red">
+    <Group style="font(.caption); foregroundStyle(.red)">
       <%= render_slot(@inner_block) %>
     </Group>
     """
@@ -266,6 +266,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   def header(assigns) do
     ~LVN"""
+
     <VStack class={[
       "navigation-title-:title navigation-subtitle-:subtitle toolbar--toolbar",
       @class
@@ -302,7 +303,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
   """
   attr :id, :string, required: true
   attr :show, :boolean, default: false
-  attr :on_cancel, :string
+  attr :on_cancel, :string, default: nil
   slot :inner_block, required: true
 
   def modal(assigns) do
@@ -310,7 +311,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     <VStack
       id={@id}
       :if={@show}
-      class="sheet-isPresented:[attr(presented)]-content::content"
+      style='sheet(isPresented: attr("presented"), content: :content)'
       presented={@show}
       phx-change={@on_cancel}
     >
@@ -344,7 +345,10 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     <% msg = render_slot(@inner_block) || Phoenix.Flash.get(@flash, @kind) %>
     <VStack
       :if={msg != nil}
-      class="hidden alert-[attr(title)]-isPresented:[attr(presented)]-actions::actions-message::message"
+      style={[
+        "hidden()",
+        ~s[alert(attr("title"), isPresented: attr("presented"), actions: :actions, message: :message)]
+      ]}
       title={@title}
       presented={msg != nil}
       id={@id}
@@ -386,7 +390,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
         <.input field={@form[:email]} label="Email"/>
         <.input field={@form[:username]} label="Username" />
         <:actions>
-          <.button>Save</.button>
+          <.button type="submit">Save</.button>
         </:actions>
       </.simple_form>
 
@@ -424,25 +428,29 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   ## Examples
 
-      <.button>Send!</.button>
+      <.button type="submit">Send!</.button>
       <.button phx-click="go">Send!</.button>
   """
   @doc type: :component
 
   attr :type, :string, default: nil
-  attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(disabled form name value)
+  attr :rest, :global
 
   slot :inner_block, required: true
 
   def button(%{type: "submit"} = assigns) do
     ~LVN"""
     <Section>
-      <LiveSubmitButton class={[
-        "button-style-borderedProminent control-size-large",
-        "list-row-insets-EdgeInsets() list-row-background-:empty",
-        @class]}>
-        <Group class="max-w-infinity bold @class">
+      <LiveSubmitButton style={[
+        "buttonStyle(.borderedProminent)",
+        "controlSize(.large)",
+        "listRowInsets(EdgeInsets())",
+        "listRowBackground(:empty)"
+      ]} {@rest}>
+        <Group style={[
+          "frame(maxWidth: .infinity)",
+          "bold(true)"
+        ]}>
           <%= render_slot(@inner_block) %>
         </Group>
       </LiveSubmitButton>
@@ -452,7 +460,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   def button(assigns) do
     ~LVN"""
-    <Button class={@class} {@rest}>
+    <Button {@rest}>
       <%= render_slot(@inner_block) %>
     </Button>
     """
@@ -546,11 +554,11 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
   @doc type: :component
 
   attr :name, :string, required: true
-  attr :class, :string, default: nil
+  attr :rest, :global
 
   def icon(assigns) do
     ~LVN"""
-    <Image systemName={@name} class={@class} />
+    <Image systemName={@name} {@rest} />
     """
   end
 
@@ -588,6 +596,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
     [See SwiftUI docs](https://developer.apple.com/documentation/swiftui/asyncimagephase/success(_:))
     """ do
     attr :class, :string
+    attr :style, :string
   end
 
   slot :failure,
@@ -602,6 +611,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
     """ do
     attr :class, :string
+    attr :style, :string
   end
 
   def image(assigns) do
@@ -618,7 +628,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   defp image_success(%{slot: [%{inner_block: nil}]} = assigns) do
     ~LVN"""
-    <AsyncImage image template="phase.success" :for={slot <- @slot} class={slot.class} />
+    <AsyncImage image template="phase.success" :for={slot <- @slot} class={Map.get(slot, :class)} {%{ style: Map.get(slot, :style) }} />
     """
   end
 
@@ -632,7 +642,7 @@ defmodule NativeDemoWeb.CoreComponents.SwiftUI do
 
   defp image_failure(%{slot: [%{inner_block: nil}]} = assigns) do
     ~LVN"""
-    <AsyncImage error template="phase.failure" :for={slot <- @slot} class={slot.class} />
+    <AsyncImage error template="phase.failure" :for={slot <- @slot} class={Map.get(slot, :class)} {%{ style: Map.get(slot, :style) }} />
     """
   end
 

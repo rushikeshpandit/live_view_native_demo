@@ -3,13 +3,12 @@ defmodule NativeDemoWeb.CounterLive.SwiftUI do
 
   def render(assigns, _interface) do
     ~LVN"""
-    <.header>
+    <.header class={"background(Color.red)"}>
       Workspace
       <:actions>
-        <.link :if={!@current_user} navigate={~p"/users/register"} class="font-weight-semibold fg-tint">
-          Sign in or register
+        <.link navigate={~p"/users/register"} class="font-weight-semibold fg-tint">
+          Sign up
         </.link>
-
       </:actions>
     </.header>
 

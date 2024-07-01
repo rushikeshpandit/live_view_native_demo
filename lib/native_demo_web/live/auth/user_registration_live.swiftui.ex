@@ -3,7 +3,7 @@ defmodule NativeDemoWeb.UserRegistrationLive.SwiftUI do
 
   def render(assigns, _) do
     ~LVN"""
-    <.header class="multiline-text-alignment-center">
+    <.header>
       Register
       <:actions>
         <.link navigate={~p"/users/log_in"} class="font-weight-semibold fg-tint">
