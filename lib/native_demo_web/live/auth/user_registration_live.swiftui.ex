@@ -6,7 +6,7 @@ defmodule NativeDemoWeb.UserRegistrationLive.SwiftUI do
     <.header>
       Register
       <:actions>
-        <.link navigate={~p"/users/log_in"} class="font-weight-semibold fg-tint">
+        <.link navigate={~p"/users/log_in"} class="fontWeight(.semibold) fg-tint">
           Sign in
         </.link>
       </:actions>
@@ -34,7 +34,7 @@ defmodule NativeDemoWeb.UserRegistrationLive.SwiftUI do
             <Text template="title">Create an account</Text>
             <.image url={~p"/images/logo.png"}>
               <:empty></:empty>
-              <:success class="rendering-mode-template resizable scaled-to-fit fg-white" />
+              <:success class="rendering-mode-template resizable scaledToFit fg-white" />
               <:failure></:failure>
             </.image>
           </Label>

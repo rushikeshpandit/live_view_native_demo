@@ -3,15 +3,6 @@ defmodule NativeDemoWeb.HomeLive.SwiftUI do
 
   def render(assigns, _interface) do
     ~LVN"""
-    <.header>
-      Sign in to account
-      <:subtitle>Sign in to account 11</:subtitle>
-      <:actions>
-        <.link navigate={~p"/users/register"} class="font-weight-semibold fg-tint">
-          Sign up
-        </.link>
-      </:actions>
-    </.header>
     <VStack id="hello-ios">
       <HStack>
         <Text class={["bold(true)"]} >Hello iOS!</Text>

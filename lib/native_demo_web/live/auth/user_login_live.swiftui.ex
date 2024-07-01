@@ -6,7 +6,7 @@ defmodule NativeDemoWeb.UserLoginLive.SwiftUI do
     <.header>
       Sign in to account
       <:actions>
-        <.link navigate={~p"/users/register"} class="font-weight-semibold fg-tint">
+        <.link navigate={~p"/users/register"} class="fontWeight(.semibold) fg-tint">
           Sign up
         </.link>
       </:actions>
@@ -18,7 +18,7 @@ defmodule NativeDemoWeb.UserLoginLive.SwiftUI do
         <.input field={@form[:password]} type="SecureField" label="Password" />
 
         <Group template="footer">
-          <.link navigate={~p"/users/reset_password"} class="font-caption font-weight-semibold">
+          <.link navigate={~p"/users/reset_password"} class="font-caption fontWeight(.semibold)">
             Forgot your password?
           </.link>
         </Group>

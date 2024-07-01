@@ -48,7 +48,7 @@ defmodule NativeDemoWeb.UserSettingsLive.SwiftUI do
           <.input
             field={@password_form[:email]}
             type="hidden"
-            id="hidden_user_email"
+            id="hidden()_user_email"
             value={@current_email}
             readonly
           />

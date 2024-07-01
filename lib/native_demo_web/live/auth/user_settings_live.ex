@@ -47,7 +47,7 @@ defmodule NativeDemoWeb.UserSettingsLive do
           <.input
             field={@password_form[:email]}
             type="hidden"
-            id="hidden_user_email"
+            id="hidden()_user_email"
             value={@current_email}
           />
           <.input field={@password_form[:password]} type="password" label="New password" required />
