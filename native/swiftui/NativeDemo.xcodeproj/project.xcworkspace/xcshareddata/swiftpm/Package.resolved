@@ -6,8 +6,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/liveview-native/liveview-client-swiftui",
       "state" : {
-        "revision" : "8ff78369b6d2e7f83af97d208a577e6623f715b9",
-        "version" : "0.3.0-rc.1"
+        "branch" : "main",
+        "revision" : "6364ed3ce3a7d0b76fbbf2eaa73f98634953b4ba"
       }
     },
     {
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/liveview-native/liveview-native-core-swift.git",
       "state" : {
-        "revision" : "b6a24652b35acd534fa437cb4cf4654fcb33828f",
-        "version" : "0.1.0-7500ce9"
+        "revision" : "339594b395938e38f1fb2216a31c8791030ec9ba",
+        "version" : "0.2.1"
       }
     },
     {
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/liveview-native/liveview-native-live-form",
       "state" : {
-        "revision" : "22f5eced128c86eb59e5df1da23176f83b7f809d",
-        "version" : "0.3.0-rc.1"
+        "branch" : "addons-macro",
+        "revision" : "d2caa2d156bdaae6da49aeae176358c192d76892"
       }
     },
     {
@@ -87,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davidstump/SwiftPhoenixClient.git",
       "state" : {
-        "revision" : "613989bf2e562d8a851ea83741681c3439353b45",
-        "version" : "5.0.0"
+        "revision" : "588bf6baab5d049752748e19a4bff32421ea40ec",
+        "version" : "5.3.2"
       }
     },
     {
