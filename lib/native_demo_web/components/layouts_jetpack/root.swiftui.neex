@@ -1,3 +1,0 @@
-<.csrf_token />
-<Style url={~p"/assets/app.jetpack.styles"} />
-<%= @inner_content %>

@@ -1,37 +1,12 @@
 defmodule NativeDemoWeb.Styles.App.SwiftUI do
   use LiveViewNative.Stylesheet, :swiftui
   # Read more about UtilityStyles if you want to use them
-  # @import LiveViewNative.SwiftUI.UtilityStyles
+  @import LiveViewNative.SwiftUI.UtilityStyles
 
   # Add your styles here
   # Refer to your client's documentation on what the proper syntax
   # is for defining rules within classes
   ~SHEET"""
-
-  "foregroundcolor-" <> color do
-    foregroundStyle(to_ime(color))
-  end
-
-  "bold" do
-    bold(true)
-  end
-
-  "italic" do
-    italic(true)
-  end
-
-  "bg-circle" do
-    background(content: :circle)
-  end
-
-  "fill-" <> color do
-    fill(to_ime(color))
-  end
-
-  "background-" <> color do
-    background(to_ime(color))
-  end
-
   """
 
   # If you need to have greater control over how your style rules are created

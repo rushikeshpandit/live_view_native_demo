@@ -4,15 +4,14 @@ defmodule NativeDemoWeb.Router do
   import NativeDemoWeb.UserAuth
 
   pipeline :browser do
-    plug :accepts, ["html", "swiftui", "jetpack"]
+    plug :accepts, ["html", "swiftui"]
 
     plug :fetch_session
     plug :fetch_live_flash
 
     plug :put_root_layout,
       html: {NativeDemoWeb.Layouts, :root},
-      swiftui: {NativeDemoWeb.Layouts.SwiftUI, :root},
-      jetpack: {NativeDemoWeb.Layouts.Jetpack, :root}
+      swiftui: {NativeDemoWeb.Layouts.SwiftUI, :root}
 
     plug :protect_from_forgery
     plug :put_secure_browser_headers
